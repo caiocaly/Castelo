@@ -1,0 +1,77 @@
+* {
+  font-family: Lato;
+  /* background-color: rgba(0,0,0,0.1); /* use pra debugar */
+}
+
+.inspect {
+font-weight: bold;
+cursor: pointer;
+}
+    .inspect:hover{
+    color: #FA8072;
+    }
+    .inspect:active{
+      color: #c75d51;
+    }
+
+#complemento {
+  font-style: italic;
+}
+
+body {
+  padding: 10px;
+}
+
+div {
+  display: block;
+  max-width: 60%;
+  margin: 0px auto;
+}
+
+#botoes {
+  margin-top: 25px;
+}
+
+#content {
+  width: 100%;
+  max-width:100%;
+}
+
+button {
+  color: #FFF;
+  background-color: #FA8072;
+  border: 0;
+  display: block;
+  min-height: 48px;
+  width: 80%;
+  max-width: 400px;
+  padding: 10px 30px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: .1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: 10px auto;
+}
+  button:hover{
+    background-color: #F77567;
+  }
+  button:active{
+    background-color: #c75d51;
+    
+  }
+
+  button.context {
+    color:#FA8072;
+    background-color: transparent;
+    border: 1px;
+    border-style: solid;
+    border-color:#FA8072;
+  }
+    button.context:hover{
+    background-color: #f1f1f1;
+    }
+    button.context:active{
+    }
