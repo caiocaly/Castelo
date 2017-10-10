@@ -1,9 +1,11 @@
 function start() {
 	time = 0;
 	loadRoom(quarto);
+	currentRoom, currentRoomId;
 }
 
 function loadRoom (room) {
+	currentRoom = room;
 	console.log("Loading " + room.id);
 	clear()
 
@@ -35,19 +37,31 @@ function createClickables (room, text) {
 }
 
 function updateDescription (room, text) {
+	console.log("Updating description");
 	var updatedText = text;
-	var descriptions = room.additionalDescriptions;
-	if (descriptions) {
-		for (i=0; i < descriptions.length; i++){
-			if (eval(descriptions[i].req)) {
-				switch (descriptions[i].type) {
+	var states = room.states;
+	for (i=0; i < states.length; i++){
+		console.log("  Evaluating state " + i + ": " + states[i].req)
+		if (eval(states[i].req)) {
+			console.log("  state " + i + " is true")
+			var operations = states[i].operations;
+			for (j=0; j < operations.length; j++){
+				switch (operations[j].type) {
 					case "add":
-					updatedText += "<p>" + descriptions[i].content + "</p>";
+						console.log("    executing operation " + j + " (add)")
+						updatedText += "<p>" + operations[j].content + "</p>";
+						break;
+					case "replace":
+						console.log("    operation " + j + " (replace)")
+						updatedText = updatedText.replace(operations[j].content[0], operations[j].content[1]);
+						break;
+					default:
+						console.log("     operation [" + j + "]'s type is not valid")
 				}
-
 			}
-		}
+		} else { console.log ("  state " + i + " is false")}
 	}
+	console.log("Description update is complete");
 	return updatedText;
 }
 
@@ -59,12 +73,13 @@ var button = {
 	},
 
 	add: function (buttonObject) {
-		switch (buttonObject.type) {
+		if (buttonObject.req) {
+			if (eval(buttonObject.req)) {} else { return}
+		};
+		switch (buttonObject.type) { 
 		case "goTo":
 			var action = "loadRoom("+ buttonObject.target +")";
 			break;
-		default:
-		console.log("'"+ buttonObject.type + "' is not a valid button type")
 		}
 
 		let buttonClass;
@@ -82,7 +97,7 @@ var button = {
 }
 
 function describe(x) {
-	loadRoom(quarto);
+	loadRoom(currentRoom);
 	for (i=0; i < quarto.describeables.length; i++){
 		if (x === quarto.describeables[i].key) {
 				document.getElementById('complementArea').innerHTML = quarto.describeables[i].description;
@@ -110,12 +125,13 @@ function reset() {
 			time++;
 			loadRoom(quarto);
 		};
-	}, 2000)
+	}, 1000)
 
 }
 
 function clear() {
 	write('descriptionArea', "");
 	write('complementArea', "");
+	write('actionArea', "");
 	button.clear();
 }
