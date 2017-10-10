@@ -14,10 +14,6 @@ cursor: pointer;
       color: #c75d51;
     }
 
-#complemento {
-  font-style: italic;
-}
-
 body {
   padding: 10px;
 }
@@ -28,13 +24,8 @@ div {
   margin: 0px auto;
 }
 
-#botoes {
-  margin-top: 25px;
-}
-
-#content {
-  width: 100%;
-  max-width:100%;
+#complementArea {
+  font-style: italic;
 }
 
 button {
@@ -63,15 +54,15 @@ button {
     
   }
 
-  button.context {
+  button.description {
     color:#FA8072;
     background-color: transparent;
     border: 1px;
     border-style: solid;
     border-color:#FA8072;
   }
-    button.context:hover{
+    button.description:hover{
     background-color: #f1f1f1;
     }
-    button.context:active{
+    button.description:active{
     }
