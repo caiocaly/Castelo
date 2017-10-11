@@ -8,6 +8,7 @@ state operations:
 */
 
 var time;
+var hasKey = false;
 
 var system = {
 	sleep: ["<p>You feel so tired...<p>", "<p>So... Tired<p>", "....tired.", "<p>.. ..... ..</p>", ""]};
@@ -25,10 +26,13 @@ var quarto = {
 
 	describeables: [
 		{key: "_janela",
-			description: "<p>Você sempre amou a janela enorme do quarto e a brisa que entra de manhã... \
-			Mas...? Elas sempre tiveram esas barras de metal? </p>\
-			<p>Pensando bem... Sim, sempre estiveram aí, claro.</p>",
-			
+			description: [
+				{req: "time === 0",
+				content: "<p>Você sempre amou a janela enorme do quarto e a brisa que entra de manhã... \
+				Mas...? Elas sempre tiveram esas barras de metal? </p>\
+				<p>Pensando bem... Sim, sempre estiveram aí, claro.</p>"},
+				{req: "time ===1",
+				content: "<p>What</p>"}]
 		},
 
 		{key: "_cama",
@@ -45,16 +49,10 @@ var quarto = {
 	],
 
 	baseButtons: [
-		{title: "Apenas um botão",
-		type: "goTo",
-		target: "quarto"},
-
-		{req: "time != 0",
-		title: "Apenas outro botão",
-		type: "operations",
-		results: [{type: "add", content:"Teste"}]
-
-		}
+		{req: "hasKey == false",
+		title: "Sair do quarto",
+		type: "text",
+		content: "Hum, a porta está trancada..."}
 	],
 
 	states: [
