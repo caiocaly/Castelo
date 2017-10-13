@@ -7,9 +7,6 @@ state operations:
 	> replace: subsitui um pedaço da descrição base por outro
 */
 
-var time;
-var hasKey = false;
-
 var system = {
 	sleep: ["<p>You feel so tired...<p>", "<p>So... Tired<p>", "....tired.", "<p>.. ..... ..</p>", ""]};
 
@@ -24,15 +21,28 @@ var quarto = {
 		Tudo parece estar no lugar... Sua _penteadeira, sempre organizada, é o charme
 		do cômodo. </p>`,
 
+		states: [
+		{req: "TIME === 1",
+		operations: [
+			{type: "add",
+			content: "Você se sente um pouco cansada..."},
+
+			{type: "replace",
+			content: ["Seu quarto.", "Você acorda no seu quarto...."]}
+		]}
+	],
+
 	describeables: [
 		{key: "_janela",
 			description: [
-				{req: "time === 0",
+				{req: "TIME === 0",
 				content: "<p>Você sempre amou a janela enorme do quarto e a brisa que entra de manhã... \
 				Mas...? Elas sempre tiveram esas barras de metal? </p>\
 				<p>Pensando bem... Sim, sempre estiveram aí, claro.</p>"},
-				{req: "time ===1",
-				content: "<p>What</p>"}]
+				
+				{req: "TIME ===1",
+				content: "<p>Você sempre amou a janela enorme do quarto e a brisa que entra de manhã., \
+				mas você nunca gostou dessas barras...</p>"}]
 		},
 
 		{key: "_cama",
@@ -49,20 +59,11 @@ var quarto = {
 	],
 
 	baseButtons: [
-		{req: "hasKey == false",
+		{req: "HASKEY == false",
 		title: "Sair do quarto",
 		type: "text",
 		content: "Hum, a porta está trancada..."}
 	],
 
-	states: [
-		{req: "time === 1",
-		operations: [
-			{type: "add",
-			content: "A terrible chill goes down your spine"},
-
-			{type: "replace",
-			content: ["Seu quarto.", "Você acorda no seu quarto."]}
-		]}
-	]
+	
 }

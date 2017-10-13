@@ -1,27 +1,18 @@
 function start() {
-	time = 0;
 	loadRoom(quarto);
-	currentRoom;
 }
 
 function loadRoom (room) {
-	currentRoom = room;
 	console.log("Loading " + room.id);
 	clear.all();
-
 	build.description(room);
 	button.construct(room.baseButtons, 'base');
-
-	
 	console.log(room.id + " loaded");
 }
 
 function createClickables (room, string) {
-	console.log("  Creating clickables for " + room.id)
-
-	//pega a string de texto q é alimentada e verifica nos clickables do cômodo fornecido]
+	console.log("  Creating clickables for " + room.id);
 	var updatedText = string; 
-
 	// esse for itera pelas posições de describeables
 	for (i=0; i < room.describeables.length; i++){
 		var key = room.describeables[i].key; //armazena a key do describeable em key
@@ -31,7 +22,7 @@ function createClickables (room, string) {
 			console.log("    " + key + " was found in the string")
 			let value = key.replace("_", ""); //tira o indicador de describeable da key para a variável value
 			let describeThis = `build.describe('${key}')`; //chave para chamado da função describe
-			var clickable = `<span class="inspect" onclick="${describeThis}"> ${value} </span>`;
+			var clickable = `<span class="inspect" onclick="${describeThis}">${value}</span>`;
 			updatedText = updatedText.replace(key, clickable);
 		} else { console.log ("    " + key + "not found in the string")}
 	}
@@ -83,6 +74,7 @@ var button = {
 				var action = "loadRoom("+ buttonObject.target +")";
 				break;
 			case "text":
+				var action = `operation.overwrite("actionArea","${buttonObject.content}")`;
 				break;
 		}
 
@@ -110,10 +102,6 @@ var button = {
 	}
 }
 
-function addText(ElementId, content) {
-	document.getElementById(ElementId).innerHTML += content;
-}
-
 var clear = {
 	description: function() {operation.overwrite('descriptionArea', "")},
 	complement: function() {operation.overwrite('complementArea', "")},
@@ -126,16 +114,15 @@ var clear = {
 	}
 }
 
-
 function reset() {
 	clear.all();
 	i = 0;
 	register = setInterval(function(){
-		addText('complementArea', system.sleep[i]);
+		operation.write('complementArea', system.sleep[i]);
 		i++;
 		if (i==system.sleep.length) {
 			clearInterval(register);
-			time++;
+			TIME++;
 			loadRoom(quarto);
 		};
 	}, 1000)
@@ -149,26 +136,28 @@ var build = {
 		currentDescription = createClickables(room, currentDescription);
 		operation.overwrite("descriptionArea", currentDescription);
 	},
-	describe: function (key) {
-	for (i=0; i < quarto.describeables.length; i++){
-		if (key === quarto.describeables[i].key) {
-			let describeable = quarto.describeables[i];
+	describe: function (objectKey) {
+	console.log(`called describe function for ${objectKey} key`)
+	const roomDescribeables = quarto.describeables;
+	for (i=0; i < roomDescribeables.length; i++){
+		if (objectKey === roomDescribeables[i].key) {
+			let describeable = roomDescribeables[i].description;
 			switch (typeof describeable) {
 				case "string":
-				var text = describeable.description;
+				var text = describeable;
 				break;
 
 				case "object" :
-				for (i=0; i<describeable.description.length; i++) {
-					if (eval(describeable.description[i].req) === true){
-						var text = describeable.description[i].content;
+				for (i=0; i<describeable.length; i++) {
+					if (eval(describeable[i].req) === true){
+						var text = describeable[i].content;
 					}
 				}
 				break;
 			}
 
-				document.getElementById('complementArea').innerHTML = text;
-			}
+			document.getElementById('complementArea').innerHTML = text;
+		}
 	}
 	}
 }
