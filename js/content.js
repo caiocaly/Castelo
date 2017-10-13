@@ -39,7 +39,7 @@ var quarto = {
 				content: "<p>Você sempre amou a janela enorme do quarto e a brisa que entra de manhã... \
 				Mas...? Elas sempre tiveram esas barras de metal? </p>\
 				<p>Pensando bem... Sim, sempre estiveram aí, claro.</p>"},
-				
+
 				{req: "TIME ===1",
 				content: "<p>Você sempre amou a janela enorme do quarto e a brisa que entra de manhã., \
 				mas você nunca gostou dessas barras...</p>"}]
@@ -59,10 +59,20 @@ var quarto = {
 	],
 
 	baseButtons: [
-		{req: "HASKEY == false",
-		title: "Sair do quarto",
+		{req: "HASKEY === false && TRIEDTOOPEN === false",
+		title: "Ir para a sala",
 		type: "text",
-		content: "Hum, a porta está trancada..."}
+		content: "Você tenta, mas a porta tá trancada..."},
+
+		{req: "HASKEY === false && TRIEDTOOPEN === true",
+		title: "Abrir a porta",
+		type: "text",
+		content: "A porta está fechada..."},
+
+		{req: "HASKEY == false",
+		title: "Carregar 'quarto' de novo",
+		type: "goTo",
+		target: 'quarto'}
 	],
 
 	

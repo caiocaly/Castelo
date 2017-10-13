@@ -2,7 +2,13 @@ function start() {
 	loadRoom(quarto);
 }
 
+function reload (){
+	loadRoom(ROOM);
+	build.describe(CONTEXT);
+}
+
 function loadRoom (room) {
+	ROOM = room;
 	console.log("Loading " + room.id);
 	clear.all();
 	build.description(room);
@@ -20,7 +26,7 @@ function createClickables (room, string) {
 
 		if (updatedText.indexOf(key) !== -1){ //checa se a key aparece no texto fornecido
 			console.log("    " + key + " was found in the string")
-			let value = key.replace("_", ""); //tira o indicador de describeable da key para a variável value
+			let value = key.replace("_", ""); //tira o indicador de describeable da key para a valueariável value
 			let describeThis = `build.describe('${key}')`; //chave para chamado da função describe
 			var clickable = `<span class="inspect" onclick="${describeThis}">${value}</span>`;
 			updatedText = updatedText.replace(key, clickable);
@@ -66,34 +72,47 @@ var button = {
 	},
 
 	add: function (buttonObject, targetDiv) {
-		if (buttonObject.req) {
-			if (eval(buttonObject.req)) {} else { return}
-		};
-		switch (buttonObject.type) { 
-			case "goTo":
-				var action = "loadRoom("+ buttonObject.target +")";
-				break;
-			case "text":
-				var action = `operation.overwrite("actionArea","${buttonObject.content}")`;
-				break;
+		let buttonClass, action;
+		let caseCheck = function (validType){
+			x = buttonObject.type.indexOf(validType);
+			return (x !== -1)
 		}
 
-		switch (targetDiv) {
+		if (buttonObject.req) {
+			if (eval(buttonObject.req)) {} else {return}
+		};
+ 
+		switch (targetDiv) { //where to render the button
 			case "base":
-			var div = "buttonArea";
+			targetDiv = "buttonArea";
 			break;
 
 			case "context":
-			var div = "ctxButtonArea";
+			targetDiv = "ctxButtonArea";
 			break;
+
+			default:
+			console.log("button target div not valid");
 		}
 
-		let buttonClass;
-		buttonObject.class ? buttonClass = buttonObject.class : 
-		buttonClass = "standart"
+		switch (true) { //what is the buttons function
+			case caseCheck("text") === true:
+			action = "operation.overwrite('actionArea', '" + buttonObject.content  + "')";
+			break;
 
-			document.getElementById("buttonArea").innerHTML +=
-	`<button class="${buttonClass}" onclick="${action}">${buttonObject.title}</button>`;
+			case caseCheck("goTo") === true:
+			action = "loadRoom(" + buttonObject.target + ")";
+			break;
+
+			default:
+			console.log("invalid button type");
+		}
+		
+		buttonObject.class ? buttonClass = buttonObject.class : buttonClass = "standart";
+
+
+		document.getElementById("buttonArea").innerHTML +=
+		`<button class="${buttonClass}" onclick="${action}">${buttonObject.title}</button>`;
 	},
 
 	clear: function () {
@@ -137,6 +156,8 @@ var build = {
 		operation.overwrite("descriptionArea", currentDescription);
 	},
 	describe: function (objectKey) {
+		loadRoom(ROOM);
+		clear.action();
 	console.log(`called describe function for ${objectKey} key`)
 	const roomDescribeables = quarto.describeables;
 	for (i=0; i < roomDescribeables.length; i++){
@@ -157,6 +178,7 @@ var build = {
 			}
 
 			document.getElementById('complementArea').innerHTML = text;
+			CONTEXT = objectKey;
 		}
 	}
 	}
@@ -175,3 +197,7 @@ var operation = {
 		this.overwrite(ElementId, newContent);
 	}
 }	
+
+function updateVariable (x){
+	TIME = x;	
+}
